@@ -85,14 +85,14 @@ class StoryqTheme {
   );
 
   static ColorScheme darkColorScheme = ColorScheme(
-    primary: StoryqColors.mediumGreen.color,
+    primary: StoryqColors.darkGreen.color,
     onPrimary: StoryqColors.softGreen.color,
-    secondary: StoryqColors.darkGreen.color,
-    onSecondary: StoryqColors.softGreen.color,
+    secondary: StoryqColors.lightGreen.color,
+    onSecondary: StoryqColors.darkGreen.color,
     error: StoryqColors.red.color,
     onError: StoryqColors.white.color,
-    surface: StoryqColors.lightGreen.color,
-    onSurface: StoryqColors.darkGreen.color,
+    surface: StoryqColors.mediumGreen.color,
+    onSurface: StoryqColors.softGreen.color,
     brightness: Brightness.dark,
     surfaceContainer: StoryqColors.lightGreen.color,
   );
