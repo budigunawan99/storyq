@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storyq/data/model/story.dart';
 import 'package:storyq/provider/settings/theme_provider.dart';
+import 'package:storyq/routes/router_delegate.dart';
+import 'package:storyq/screen/detail/detail_screen.dart';
 import 'package:storyq/screen/home/home_screen.dart';
-import 'package:storyq/static/navigation_route.dart';
 import 'package:storyq/style/theme/storyq_theme.dart';
 
 void main() {
@@ -14,8 +16,21 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late MyRouterDelegate myRouterDelegate;
+
+  @override
+  void initState() {
+    super.initState();
+    myRouterDelegate = MyRouterDelegate();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +43,10 @@ class MyApp extends StatelessWidget {
               themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
           theme: StoryqTheme.lightTheme,
           darkTheme: StoryqTheme.darkTheme,
-          initialRoute: NavigationRoute.homeRoute.name,
-          routes: {
-            NavigationRoute.homeRoute.name: (context) => const HomeScreen(),
-          },
+          home: Router(
+            routerDelegate: myRouterDelegate,
+            backButtonDispatcher: RootBackButtonDispatcher(),
+          ),
         );
       },
     );

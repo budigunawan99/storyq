@@ -37,7 +37,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
           icon: Icon(
             Icons.arrow_back,
             size: 20,
-            color: Theme.of(context).colorScheme.onPrimary,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
       );
