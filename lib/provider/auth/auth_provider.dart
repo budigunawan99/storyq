@@ -3,6 +3,7 @@ import 'package:storyq/data/api/api_services.dart';
 import 'package:storyq/data/local/auth_repository.dart';
 import 'package:storyq/data/model/session.dart';
 import 'package:storyq/data/model/user.dart';
+import 'package:storyq/data/model/user_login.dart';
 import 'package:storyq/static/login_result_state.dart';
 import 'package:storyq/static/logout_result_state.dart';
 import 'package:storyq/static/register_result_state.dart';
@@ -30,12 +31,22 @@ class AuthProvider extends ChangeNotifier {
   Session? _session;
   Session? get session => _session;
 
-  Future<bool> login(User user) async {
+  void setLoginResultState(LoginResultState value) {
+    _loginResultState = value;
+    notifyListeners();
+  }
+
+  void setRegisterResultState(RegisterResultState value) {
+    _registerResultState = value;
+    notifyListeners();
+  }
+
+  Future<bool> login(UserLogin userLogin) async {
     try {
       _loginResultState = LoginLoadingState();
       notifyListeners();
 
-      final result = await _apiServices.login(user);
+      final result = await _apiServices.login(userLogin);
       if (result.error) {
         _loginResultState = LoginErrorState(result.message);
         notifyListeners();
@@ -78,7 +89,7 @@ class AuthProvider extends ChangeNotifier {
     return true;
   }
 
-  Future<void> logout() async {
+  Future<bool> logout() async {
     try {
       _logoutResultState = LogoutLoadingState();
       notifyListeners();
@@ -92,5 +103,6 @@ class AuthProvider extends ChangeNotifier {
       _logoutResultState = LogoutErrorState(e.toString());
       notifyListeners();
     }
+    return !isLoggedIn;
   }
 }

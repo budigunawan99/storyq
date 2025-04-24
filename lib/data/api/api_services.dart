@@ -6,23 +6,28 @@ import 'package:http/http.dart' as http;
 import 'package:storyq/data/model/login_response.dart';
 import 'package:storyq/data/model/register_response.dart';
 import 'package:storyq/data/model/user.dart';
+import 'package:storyq/data/model/user_login.dart';
 
 class ApiServices {
   static const String _baseUrl = "https://story-api.dicoding.dev/v1";
 
-  Future<LoginResponse> login(User user) async {
+  Future<LoginResponse> login(UserLogin userLogin) async {
     try {
       final response = await http.post(
         Uri.parse("$_baseUrl/login"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(user.toJson()),
+        body: jsonEncode(userLogin.toJson()),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return LoginResponse.fromJson(jsonDecode(response.body));
       } else {
+        final message = jsonDecode(response.body)["message"];
+        if (message != null) {
+          throw Exception(message);
+        }
         throw Exception('Gagal mengautentikasi data.');
       }
     } catch (e) {
@@ -33,7 +38,7 @@ class ApiServices {
       } else if (e is FormatException) {
         throw Exception('Gagal loading data. Coba lagi nanti.');
       } else {
-        throw Exception("Terjadi kesalahan. Mohon coba lagi nanti.");
+        throw Exception(e.toString().substring(11));
       }
     }
   }
@@ -47,10 +52,13 @@ class ApiServices {
         },
         body: jsonEncode(user.toJson()),
       );
-
       if (response.statusCode == 200 || response.statusCode == 201) {
         return RegisterResponse.fromJson(jsonDecode(response.body));
       } else {
+        final message = jsonDecode(response.body)["message"];
+        if (message != null) {
+          throw Exception(message);
+        }
         throw Exception('Gagal mengautentikasi data.');
       }
     } catch (e) {
@@ -61,7 +69,7 @@ class ApiServices {
       } else if (e is FormatException) {
         throw Exception('Gagal loading data. Coba lagi nanti.');
       } else {
-        throw Exception("Terjadi kesalahan. Mohon coba lagi nanti.");
+        throw Exception(e.toString().substring(11));
       }
     }
   }

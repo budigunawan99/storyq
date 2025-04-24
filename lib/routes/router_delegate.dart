@@ -65,11 +65,32 @@ class MyRouterDelegate extends RouterDelegate
     MaterialPage(key: ValueKey("SplashPage"), child: SplashScreen()),
   ];
   List<Page> get _loggedOutStack => [
-    MaterialPage(key: const ValueKey("LoginPage"), child: LoginScreen()),
+    MaterialPage(
+      key: const ValueKey("LoginPage"),
+      child: LoginScreen(
+        onLogin: () {
+          isLoggedIn = true;
+          notifyListeners();
+        },
+        onRegister: () {
+          isRegister = true;
+          notifyListeners();
+        },
+      ),
+    ),
     if (isRegister == true)
       MaterialPage(
         key: const ValueKey("RegisterPage"),
-        child: RegisterScreen(),
+        child: RegisterScreen(
+          onLogin: () {
+            isRegister = false;
+            notifyListeners();
+          },
+          onRegister: () {
+            isRegister = false;
+            notifyListeners();
+          },
+        ),
       ),
   ];
   List<Page> get _loggedInStack => [
@@ -79,6 +100,10 @@ class MyRouterDelegate extends RouterDelegate
         stories: stories,
         onTapped: (String storyId) {
           selectedStory = storyId;
+          notifyListeners();
+        },
+        onLogout: () {
+          isLoggedIn = false;
           notifyListeners();
         },
       ),
