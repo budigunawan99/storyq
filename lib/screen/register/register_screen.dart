@@ -161,6 +161,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             builder: (context) {
                               WidgetsBinding.instance.addPostFrameCallback((_) {
                                 widget.onRegister();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      "Proses registrasi berhasil! Silahkan login menggunakan akun yang ditambahkan!",
+                                    ),
+                                  ),
+                                );
                                 value.setRegisterResultState(
                                   RegisterNoneState(),
                                 );
