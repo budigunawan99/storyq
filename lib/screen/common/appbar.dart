@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storyq/provider/settings/theme_provider.dart';
-import 'package:storyq/screen/common/theme_switcher.dart';
 
 class Appbar extends StatelessWidget implements PreferredSizeWidget {
   final bool isHomePage;
   final String? title;
-  const Appbar({super.key, required this.isHomePage, this.title});
+  final Function()? toSettingsPage;
+  
+  const Appbar({
+    super.key,
+    required this.isHomePage,
+    this.title,
+    this.toSettingsPage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +21,21 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
         return AppBar(
           title: titleOptions(title, themeProvider),
           leading: leadingOptions(context),
-          actions: [ThemeSwitcher()],
+          actions: [
+            isHomePage
+                ? IconButton(
+                  onPressed: () {
+                    if (toSettingsPage != null) {
+                      toSettingsPage!();
+                    }
+                  },
+                  icon: const Padding(
+                    padding: EdgeInsets.only(right: 10.0, left: 10.0),
+                    child: Icon(Icons.settings, size: 25),
+                  ),
+                )
+                : SizedBox(),
+          ],
         );
       },
     );

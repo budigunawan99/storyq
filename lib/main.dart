@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:storyq/config/web/url_strategy.dart';
 import 'package:storyq/data/api/api_services.dart';
 import 'package:storyq/data/local/auth_repository.dart';
+import 'package:storyq/data/local/theme_shared_preferences_service.dart';
 import 'package:storyq/provider/auth/auth_provider.dart';
 import 'package:storyq/provider/settings/theme_provider.dart';
+import 'package:storyq/provider/settings/theme_shared_preferences_provider.dart';
+import 'package:storyq/routes/route_information_parser.dart';
 import 'package:storyq/routes/router_delegate.dart';
 import 'package:storyq/style/theme/storyq_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
-
+  usePathUrlStrategy();
   runApp(
     MultiProvider(
       providers: [
@@ -23,6 +27,13 @@ void main() async {
               (context) => AuthProvider(
                 context.read<AuthRepository>(),
                 context.read<ApiServices>(),
+              ),
+        ),
+        Provider(create: (context) => ThemeSharedPreferencesService(prefs)),
+        ChangeNotifierProvider(
+          create:
+              (context) => ThemeSharedPreferencesProvider(
+                context.read<ThemeSharedPreferencesService>(),
               ),
         ),
       ],
@@ -40,34 +51,32 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late MyRouterDelegate myRouterDelegate;
-  late AuthProvider authProvider;
+  late MyRouteInformationParser myRouteInformationParser;
 
   @override
   void initState() {
     super.initState();
 
-    authProvider = context.read<AuthProvider>();
-
     final authRepository = context.read<AuthRepository>();
 
     myRouterDelegate = MyRouterDelegate(authRepository);
+    myRouteInformationParser = MyRouteInformationParser();
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
-        return MaterialApp(
+        return MaterialApp.router(
           debugShowCheckedModeBanner: false,
           title: "storyq",
           themeMode:
               themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
           theme: StoryqTheme.lightTheme,
           darkTheme: StoryqTheme.darkTheme,
-          home: Router(
-            routerDelegate: myRouterDelegate,
-            backButtonDispatcher: RootBackButtonDispatcher(),
-          ),
+          routerDelegate: myRouterDelegate,
+          routeInformationParser: myRouteInformationParser,
+          backButtonDispatcher: RootBackButtonDispatcher(),
         );
       },
     );
