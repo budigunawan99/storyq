@@ -28,7 +28,7 @@ class MyRouteInformationParser
       }
     } else if (uri.pathSegments.length == 2) {
       final first = uri.pathSegments[0].toLowerCase();
-      final second = uri.pathSegments[1].toLowerCase();
+      final second = uri.pathSegments[1];
       if (first == 'detail') {
         return DetailPageConfiguration(second);
       } else {

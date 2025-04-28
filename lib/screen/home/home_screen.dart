@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:storyq/data/model/story.dart';
+import 'package:provider/provider.dart';
+import 'package:storyq/provider/home/story_list_provider.dart';
 import 'package:storyq/screen/common/appbar.dart';
+import 'package:storyq/screen/common/skeleton_loading.dart';
 import 'package:storyq/screen/home/story_list_item.dart';
+import 'package:storyq/static/story_list_result_state.dart';
 
 class HomeScreen extends StatefulWidget {
-  final List<Story> stories;
   final Function(String) onTapped;
   final Function() toSettingsPage;
 
   const HomeScreen({
     super.key,
-    required this.stories,
     required this.onTapped,
     required this.toSettingsPage,
   });
@@ -20,6 +21,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<StoryListProvider>().fetchStoryList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,17 +40,71 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: CustomScrollView(
         slivers: [
-          SliverList.separated(
-            itemCount: widget.stories.length,
-            itemBuilder: (context, index) {
-              final story = (widget.stories)[index];
-              return InkWell(
-                child: StoryListItem(story: story),
-                onTap: () => widget.onTapped(story.id),
-              );
+          Consumer<StoryListProvider>(
+            builder: (context, value, child) {
+              return switch (value.resultState) {
+                StoryListLoadingState() => SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    child: SkeletonLoading(count: 2),
+                  ),
+                ),
+                StoryListLoadedState(data: var storyList) =>
+                  SliverList.separated(
+                    itemCount: storyList.length,
+                    itemBuilder: (context, index) {
+                      final story = storyList[index];
+                      return InkWell(
+                        child: StoryListItem(story: story),
+                        onTap: () => widget.onTapped(story.id),
+                      );
+                    },
+                    separatorBuilder:
+                        (context, index) =>
+                            const Divider(height: 0.2, thickness: 0.5),
+                  ),
+                StoryListErrorState(error: var message) => SliverToBoxAdapter(
+                  child: Center(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset('assets/images/nodata.png', height: 250),
+                          const SizedBox.square(dimension: 8),
+                          Text(
+                            message,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                _ => SliverToBoxAdapter(
+                  child: Center(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset('assets/images/empty.png', height: 250),
+                          const SizedBox.square(dimension: 8),
+                          Text(
+                            "Story sedang tidak tersedia.",
+                            style: Theme.of(context).textTheme.bodyLarge,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              };
             },
-            separatorBuilder:
-                (context, index) => const Divider(height: 0.2, thickness: 0.5),
           ),
         ],
       ),

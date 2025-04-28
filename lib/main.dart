@@ -6,6 +6,8 @@ import 'package:storyq/data/api/api_services.dart';
 import 'package:storyq/data/local/auth_repository.dart';
 import 'package:storyq/data/local/theme_shared_preferences_service.dart';
 import 'package:storyq/provider/auth/auth_provider.dart';
+import 'package:storyq/provider/detail/story_detail_provider.dart';
+import 'package:storyq/provider/home/story_list_provider.dart';
 import 'package:storyq/provider/settings/theme_provider.dart';
 import 'package:storyq/provider/settings/theme_shared_preferences_provider.dart';
 import 'package:storyq/routes/route_information_parser.dart';
@@ -34,6 +36,20 @@ void main() async {
           create:
               (context) => ThemeSharedPreferencesProvider(
                 context.read<ThemeSharedPreferencesService>(),
+              ),
+        ),
+        ChangeNotifierProvider(
+          create:
+              (context) => StoryListProvider(
+                context.read<ApiServices>(),
+                context.read<AuthRepository>(),
+              ),
+        ),
+        ChangeNotifierProvider(
+          create:
+              (context) => StoryDetailProvider(
+                context.read<ApiServices>(),
+                context.read<AuthRepository>(),
               ),
         ),
       ],

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:storyq/data/local/auth_repository.dart';
 import 'package:storyq/data/model/page_configuration.dart';
-import 'package:storyq/data/model/story.dart';
 import 'package:storyq/screen/common/unknown_screen.dart';
 import 'package:storyq/screen/detail/detail_screen.dart';
 import 'package:storyq/screen/home/home_screen.dart';
@@ -174,7 +173,6 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
     MaterialPage(
       key: const ValueKey("HomePage"),
       child: HomeScreen(
-        stories: stories,
         onTapped: (String storyId) {
           selectedStory = storyId;
           notifyListeners();
