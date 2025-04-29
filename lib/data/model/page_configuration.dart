@@ -16,4 +16,6 @@ final class DetailPageConfiguration extends PageConfiguration {
 
 final class SettingsPageConfiguration extends PageConfiguration {}
 
+final class CreateStoryPageConfiguration extends PageConfiguration {}
+
 final class UnknownPageConfiguration extends PageConfiguration {}

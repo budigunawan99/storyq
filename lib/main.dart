@@ -6,6 +6,7 @@ import 'package:storyq/data/api/api_services.dart';
 import 'package:storyq/data/local/auth_repository.dart';
 import 'package:storyq/data/local/theme_shared_preferences_service.dart';
 import 'package:storyq/provider/auth/auth_provider.dart';
+import 'package:storyq/provider/create/create_story_provider.dart';
 import 'package:storyq/provider/detail/story_detail_provider.dart';
 import 'package:storyq/provider/home/story_list_provider.dart';
 import 'package:storyq/provider/settings/theme_provider.dart';
@@ -52,6 +53,7 @@ void main() async {
                 context.read<AuthRepository>(),
               ),
         ),
+        ChangeNotifierProvider(create: (context) => CreateStoryProvider()),
       ],
       child: const MyApp(),
     ),

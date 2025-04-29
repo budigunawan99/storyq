@@ -9,11 +9,13 @@ import 'package:storyq/static/story_list_result_state.dart';
 class HomeScreen extends StatefulWidget {
   final Function(String) onTapped;
   final Function() toSettingsPage;
+  final Function() toCreateStoryPage;
 
   const HomeScreen({
     super.key,
     required this.onTapped,
     required this.toSettingsPage,
+    required this.toCreateStoryPage,
   });
 
   @override
@@ -34,7 +36,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: Appbar(isHomePage: true, toSettingsPage: widget.toSettingsPage),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          widget.toCreateStoryPage();
+        },
         tooltip: "Tambah cerita",
         child: const Icon(Icons.add, size: 28),
       ),

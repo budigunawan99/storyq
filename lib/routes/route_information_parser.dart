@@ -23,6 +23,8 @@ class MyRouteInformationParser
         return SplashPageConfiguration();
       } else if (first == 'settings') {
         return SettingsPageConfiguration();
+      } else if (first == 'create-story') {
+        return CreateStoryPageConfiguration();
       } else {
         return UnknownPageConfiguration();
       }
@@ -53,6 +55,9 @@ class MyRouteInformationParser
       HomePageConfiguration() => RouteInformation(uri: Uri.parse("/")),
       SettingsPageConfiguration() => RouteInformation(
         uri: Uri.parse("/settings"),
+      ),
+      CreateStoryPageConfiguration() => RouteInformation(
+        uri: Uri.parse("/create-story"),
       ),
       DetailPageConfiguration() => RouteInformation(
         uri: Uri.parse("/detail/${configuration.storyId}"),

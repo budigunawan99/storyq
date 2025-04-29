@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:storyq/data/local/auth_repository.dart';
 import 'package:storyq/data/model/page_configuration.dart';
 import 'package:storyq/screen/common/unknown_screen.dart';
+import 'package:storyq/screen/create/create_story_screen.dart';
 import 'package:storyq/screen/detail/detail_screen.dart';
 import 'package:storyq/screen/home/home_screen.dart';
 import 'package:storyq/screen/login/login_screen.dart';
@@ -34,6 +35,7 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
   bool isRegister = false;
 
   bool isSettingsPage = false;
+  bool isCreateStoryPage = false;
 
   bool? isUnknown;
 
@@ -65,6 +67,10 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
           isSettingsPage = false;
           notifyListeners();
         }
+        if (page.key == const ValueKey("CreateStoryPage")) {
+          isCreateStoryPage = false;
+          notifyListeners();
+        }
         if (page.key == const ValueKey("UnknownPage")) {
           isUnknown = false;
           notifyListeners();
@@ -85,6 +91,8 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
       return UnknownPageConfiguration();
     } else if (isSettingsPage == true) {
       return SettingsPageConfiguration();
+    } else if (isCreateStoryPage == true) {
+      return CreateStoryPageConfiguration();
     } else if (selectedStory == null) {
       return HomePageConfiguration();
     } else if (selectedStory != null) {
@@ -101,11 +109,13 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
         isUnknown = true;
         isRegister = false;
         isSettingsPage = false;
+        isCreateStoryPage = false;
         break;
       case RegisterPageConfiguration():
         isUnknown = false;
         selectedStory = null;
         isSettingsPage = false;
+        isCreateStoryPage = false;
         isRegister = true;
         break;
       case HomePageConfiguration() ||
@@ -115,18 +125,28 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
         selectedStory = null;
         isRegister = false;
         isSettingsPage = false;
+        isCreateStoryPage = false;
         break;
       case DetailPageConfiguration():
         isUnknown = false;
         isRegister = false;
         isSettingsPage = false;
+        isCreateStoryPage = false;
         selectedStory = configuration.storyId.toString();
         break;
       case SettingsPageConfiguration():
         isUnknown = false;
         isRegister = false;
         selectedStory = null;
+        isCreateStoryPage = false;
         isSettingsPage = true;
+        break;
+      case CreateStoryPageConfiguration():
+        isUnknown = false;
+        isRegister = false;
+        selectedStory = null;
+        isSettingsPage = false;
+        isCreateStoryPage = true;
         break;
     }
 
@@ -181,6 +201,10 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
           isSettingsPage = true;
           notifyListeners();
         },
+        toCreateStoryPage: () {
+          isCreateStoryPage = true;
+          notifyListeners();
+        },
       ),
     ),
     if (selectedStory != null)
@@ -198,6 +222,12 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
             notifyListeners();
           },
         ),
+      ),
+
+    if (isCreateStoryPage)
+      MaterialPage(
+        key: const ValueKey("CreateStoryPage"),
+        child: CreateStoryScreen(),
       ),
   ];
 }
