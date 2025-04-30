@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:storyq/common.dart';
 import 'package:storyq/provider/detail/story_detail_provider.dart';
 import 'package:storyq/screen/common/appbar.dart';
 import 'package:storyq/screen/common/skeleton_loading.dart';
@@ -151,7 +152,7 @@ class _DetailScreenState extends State<DetailScreen> {
                           Image.asset('assets/images/empty.png', height: 250),
                           const SizedBox.square(dimension: 8),
                           Text(
-                            "Story sedang tidak tersedia.",
+                            AppLocalizations.of(context)!.emptyStoryText,
                             style: Theme.of(context).textTheme.bodyLarge,
                             textAlign: TextAlign.center,
                           ),

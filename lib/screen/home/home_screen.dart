@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storyq/common.dart';
 import 'package:storyq/provider/home/story_list_provider.dart';
 import 'package:storyq/screen/common/appbar.dart';
 import 'package:storyq/screen/common/skeleton_loading.dart';
@@ -39,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () {
           widget.toCreateStoryPage();
         },
-        tooltip: "Tambah cerita",
+        tooltip: AppLocalizations.of(context)!.createStoryMenu,
         child: const Icon(Icons.add, size: 28),
       ),
       body: CustomScrollView(
@@ -98,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Image.asset('assets/images/empty.png', height: 250),
                           const SizedBox.square(dimension: 8),
                           Text(
-                            "Story sedang tidak tersedia.",
+                            AppLocalizations.of(context)!.emptyStoryText,
                             style: Theme.of(context).textTheme.bodyLarge,
                             textAlign: TextAlign.center,
                           ),

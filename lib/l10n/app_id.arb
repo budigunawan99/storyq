@@ -1,22 +1,27 @@
 {
-    "loginButton": "MASUK",
-    "registerButton": "DAFTAR",
-    "nameTextField": "Nama",
-    "formPasswordMinimum": "Minimal password adalah 8 karakter.",
-    "formValidator": "Harap masukkan {data} Anda!",
-    "@formValidator": {
-        "placeholders": {
-            "data": {
-                "type": "String"
-            }
-        }
-    },
-    "successfulRegistration": "Proses registrasi berhasil! Silahkan login menggunakan akun yang ditambahkan!",
-    "backButtonMenu": "Kembali",
-    "createStoryMenu": "Story Baru",
-    "settingsMenu": "Pengaturan",
-    "lightModeText": "Mode Terang",
-    "darkModeText": "Mode Gelap",
-    "languageMenu": "Pilih bahasa",
-    "logoutMenu": "Keluar"
+  "loginButton": "MASUK",
+  "registerButton": "DAFTAR",
+  "nameTextField": "Nama",
+  "formPasswordMinimum": "Minimal password adalah 8 karakter.",
+  "formValidator": "Harap masukkan {data} Anda!",
+  "@formValidator": {
+    "placeholders": {
+      "data": {
+        "type": "String"
+      }
+    }
+  },
+  "successfulRegistration": "Proses registrasi berhasil! Silahkan login menggunakan akun yang ditambahkan!",
+  "backButtonMenu": "Kembali",
+  "createStoryMenu": "Story Baru",
+  "settingsMenu": "Pengaturan",
+  "lightModeText": "Mode Terang",
+  "darkModeText": "Mode Gelap",
+  "languageMenu": "Pilih bahasa",
+  "logoutMenu": "Keluar",
+  "emptyStoryText": "Story sedang tidak tersedia.",
+  "saveButton": "Simpan",
+  "descriptionHint": "Masukkan deskripsi",
+  "cameraTooltip": "Buka kamera",
+  "galleryTooltip": "Pilih dari galeri"
 }

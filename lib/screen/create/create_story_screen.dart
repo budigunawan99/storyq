@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:storyq/common.dart';
 import 'package:storyq/provider/create/create_story_provider.dart';
 import 'package:storyq/provider/home/story_list_provider.dart';
 import 'package:storyq/screen/common/appbar.dart';
@@ -31,7 +32,10 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Appbar(isHomePage: false, title: "Story Baru"),
+      appBar: Appbar(
+        isHomePage: false,
+        title: AppLocalizations.of(context)!.createStoryMenu,
+      ),
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
@@ -70,7 +74,8 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
                           left: 15,
                           bottom: 15,
                           child: IconButton(
-                            tooltip: "Buka kamera",
+                            tooltip:
+                                AppLocalizations.of(context)!.cameraTooltip,
                             onPressed: () => _onCameraView(),
                             style: IconButton.styleFrom(
                               backgroundColor:
@@ -87,7 +92,7 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
                         right: 15,
                         bottom: 15,
                         child: IconButton(
-                          tooltip: "Pilih dari galeri",
+                          tooltip: AppLocalizations.of(context)!.galleryTooltip,
                           onPressed: () => _onGalleryView(),
                           style: IconButton.styleFrom(
                             backgroundColor:
@@ -114,7 +119,7 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
                       controller: descriptionController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Masukkan deskripsi',
+                        hintText: AppLocalizations.of(context)!.descriptionHint,
                         hintStyle: Theme.of(context).textTheme.labelLarge,
                       ),
                     ),
@@ -132,7 +137,7 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
                             ).colorScheme.onSurface.withValues(alpha: 0.5),
                             highlightColor: Colors.grey.withValues(alpha: 0.5),
                             child: Container(
-                              height: 30,
+                              height: 45,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
                                 color: Theme.of(context).colorScheme.onSurface,
@@ -154,7 +159,7 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
                                 ),
                                 SizedBox.square(dimension: 8),
                                 Text(
-                                  "SIMPAN",
+                                  AppLocalizations.of(context)!.saveButton,
                                   style: Theme.of(
                                     context,
                                   ).textTheme.titleSmall?.copyWith(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storyq/common.dart';
 import 'package:storyq/provider/settings/localizations_provider.dart';
 import 'package:storyq/static/localization.dart';
 
@@ -10,7 +11,14 @@ class FlagIconWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
       child: DropdownButton(
-        icon: const Icon(Icons.flag),
+        icon: Padding(
+          padding: const EdgeInsets.only(right: 20.0, left: 20.0),
+          child: Icon(
+            Icons.flag,
+            size: 25,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
         items:
             AppLocalizations.supportedLocales.map((Locale locale) {
               final flag = Localization.getFlag(locale.languageCode);

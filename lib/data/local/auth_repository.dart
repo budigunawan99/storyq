@@ -29,6 +29,7 @@ class AuthRepository {
 
   Future<bool> logout() async {
     try {
+      await Future.delayed(const Duration(seconds: 2));
       await _preferences.setString(sessionKey, "");
       return _preferences.setBool(stateKey, false);
     } catch (e) {
@@ -43,6 +44,7 @@ class AuthRepository {
   }
 
   Future<bool> isLoggedIn() async {
+    await Future.delayed(const Duration(seconds: 2));
     return _preferences.getBool(stateKey) ?? false;
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storyq/common.dart';
 import 'package:storyq/provider/settings/theme_provider.dart';
 
 class Appbar extends StatelessWidget implements PreferredSizeWidget {
@@ -24,7 +25,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
           actions: [
             isHomePage
                 ? IconButton(
-                  tooltip: "Pengaturan",
+                  tooltip: AppLocalizations.of(context)!.settingsMenu,
                   onPressed: () {
                     if (toSettingsPage != null) {
                       toSettingsPage!();
@@ -52,7 +53,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
       return Padding(
         padding: const EdgeInsets.only(left: 11.0, right: 11.0),
         child: IconButton(
-          tooltip: "Kembali",
+          tooltip: AppLocalizations.of(context)!.backButtonMenu,
           onPressed: () {
             Navigator.pop(context);
           },

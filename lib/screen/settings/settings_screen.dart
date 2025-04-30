@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storyq/common.dart';
 import 'package:storyq/provider/auth/auth_provider.dart';
 import 'package:storyq/provider/settings/theme_provider.dart';
 import 'package:storyq/screen/common/appbar.dart';
@@ -19,7 +20,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Appbar(isHomePage: false, title: "Pengaturan"),
+      appBar: Appbar(
+        isHomePage: false,
+        title: AppLocalizations.of(context)!.settingsMenu,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -32,8 +36,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     flex: 1,
                     child: Text(
                       context.watch<ThemeProvider>().isDarkMode
-                          ? "Mode Gelap"
-                          : "Mode Terang",
+                          ? AppLocalizations.of(context)!.darkModeText
+                          : AppLocalizations.of(context)!.lightModeText,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: Theme.of(context).textTheme.bodyLarge,
@@ -52,7 +56,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Flexible(
                     flex: 1,
                     child: Text(
-                      "Pilih bahasa",
+                      AppLocalizations.of(context)!.languageMenu,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: Theme.of(context).textTheme.bodyLarge,
@@ -90,7 +94,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 color: Theme.of(context).colorScheme.surface,
                               ),
                               Text(
-                                "KELUAR",
+                                AppLocalizations.of(context)!.logoutMenu,
                                 style: Theme.of(
                                   context,
                                 ).textTheme.titleSmall?.copyWith(

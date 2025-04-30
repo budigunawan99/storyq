@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storyq/common.dart';
 import 'package:storyq/data/model/user_login.dart';
 import 'package:storyq/provider/auth/auth_provider.dart';
 import 'package:storyq/provider/settings/theme_provider.dart';
@@ -45,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 key: formKey,
                 child: Column(
                   children: [
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 80),
                     context.watch<ThemeProvider>().isDarkMode
                         ? Image.asset(
                           "assets/images/storyq_dark.png",
@@ -60,7 +61,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: emailController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Harap masukkan email Anda!';
+                          return AppLocalizations.of(
+                            context,
+                          )!.formValidator("email");
                         }
                         return null;
                       },
@@ -81,7 +84,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Harap masukkan password Anda!';
+                          return AppLocalizations.of(
+                            context,
+                          )!.formValidator("password");
                         }
                         return null;
                       },
@@ -123,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       Theme.of(context).colorScheme.onSurface,
                                 ),
                                 child: Text(
-                                  "LOGIN",
+                                  AppLocalizations.of(context)!.loginButton,
                                   style: Theme.of(
                                     context,
                                   ).textTheme.titleSmall?.copyWith(
@@ -158,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       Theme.of(context).colorScheme.onSurface,
                                 ),
                                 child: Text(
-                                  "LOGIN",
+                                  AppLocalizations.of(context)!.loginButton,
                                   style: Theme.of(
                                     context,
                                   ).textTheme.titleSmall?.copyWith(
@@ -186,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Theme.of(context).colorScheme.onSurface,
                             ),
                             child: Text(
-                              "LOGIN",
+                              AppLocalizations.of(context)!.loginButton,
                               style: Theme.of(
                                 context,
                               ).textTheme.titleSmall?.copyWith(
@@ -201,7 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextButton(
                       onPressed: () => widget.onRegister(),
                       child: Text(
-                        "REGISTER",
+                        AppLocalizations.of(context)!.registerButton,
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                     ),

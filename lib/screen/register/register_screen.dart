@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storyq/common.dart';
 import 'package:storyq/data/model/user.dart';
 import 'package:storyq/provider/auth/auth_provider.dart';
 import 'package:storyq/provider/settings/theme_provider.dart';
@@ -48,7 +49,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 key: formKey,
                 child: Column(
                   children: [
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 80),
                     context.watch<ThemeProvider>().isDarkMode
                         ? Image.asset(
                           "assets/images/storyq_dark.png",
@@ -63,13 +64,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: nameController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Harap masukkan nama Anda!';
+                          return AppLocalizations.of(context)!.formValidator(
+                            AppLocalizations.of(context)!.nameTextField,
+                          );
                         }
                         return null;
                       },
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
-                        labelText: "Nama",
+                        labelText: AppLocalizations.of(context)!.nameTextField,
                         labelStyle: Theme.of(context).textTheme.labelMedium,
                       ),
                     ),
@@ -78,7 +81,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: emailController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Harap masukkan email Anda!';
+                          return AppLocalizations.of(
+                            context,
+                          )!.formValidator("email");
                         }
                         return null;
                       },
@@ -99,9 +104,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Harap masukkan password Anda!';
+                          return AppLocalizations.of(
+                            context,
+                          )!.formValidator("password");
                         } else if (value.length < 8) {
-                          return 'Minimal password adalah 8 karakter.';
+                          return AppLocalizations.of(
+                            context,
+                          )!.formPasswordMinimum;
                         }
                         return null;
                       },
@@ -146,7 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       Theme.of(context).colorScheme.onSurface,
                                 ),
                                 child: Text(
-                                  "REGISTER",
+                                  AppLocalizations.of(context)!.registerButton,
                                   style: Theme.of(
                                     context,
                                   ).textTheme.titleSmall?.copyWith(
@@ -164,7 +173,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      "Proses registrasi berhasil! Silahkan login menggunakan akun yang ditambahkan!",
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.successfulRegistration,
                                     ),
                                   ),
                                 );
@@ -191,7 +202,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       Theme.of(context).colorScheme.onSurface,
                                 ),
                                 child: Text(
-                                  "REGISTER",
+                                  AppLocalizations.of(context)!.registerButton,
                                   style: Theme.of(
                                     context,
                                   ).textTheme.titleSmall?.copyWith(
@@ -220,7 +231,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   Theme.of(context).colorScheme.onSurface,
                             ),
                             child: Text(
-                              "REGISTER",
+                              AppLocalizations.of(context)!.registerButton,
                               style: Theme.of(
                                 context,
                               ).textTheme.titleSmall?.copyWith(
@@ -236,7 +247,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     TextButton(
                       onPressed: () => widget.onLogin(),
                       child: Text(
-                        "LOGIN",
+                        AppLocalizations.of(context)!.loginButton,
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                     ),

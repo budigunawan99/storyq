@@ -1,22 +1,27 @@
 {
-    "loginButton": "LOGIN",
-    "registerButton": "REGISTER",
-    "nameTextField": "Name",
-    "formPasswordMinimum": "Minimum password is 8 characters.",
-    "formValidator": "Please insert your {data}!",
-    "@formValidator": {
-        "placeholders": {
-            "data": {
-                "type": "String"
-            }
-        }
-    },
-    "successfulRegistration": "Registration process is successful! Please login with the new account!",
-    "backButtonMenu": "Back",
-    "createStoryMenu": "New Story",
-    "settingsMenu": "Settings",
-    "lightModeText": "Light Mode",
-    "darkModeText": "Dark Mode",
-    "languageMenu": "Choose language",
-    "logoutMenu": "Logout"
+  "loginButton": "LOGIN",
+  "registerButton": "REGISTER",
+  "nameTextField": "Name",
+  "formPasswordMinimum": "Minimum password is 8 characters.",
+  "formValidator": "Please insert your {data}!",
+  "@formValidator": {
+    "placeholders": {
+      "data": {
+        "type": "String"
+      }
+    }
+  },
+  "successfulRegistration": "Registration process is successful! Please login with the new account!",
+  "backButtonMenu": "Back",
+  "createStoryMenu": "New Story",
+  "settingsMenu": "Settings",
+  "lightModeText": "Light Mode",
+  "darkModeText": "Dark Mode",
+  "languageMenu": "Choose language",
+  "logoutMenu": "Logout",
+  "emptyStoryText": "Story is not available",
+  "saveButton": "Save",
+  "descriptionHint": "Enter description",
+  "cameraTooltip": "Open camera",
+  "galleryTooltip": "Choose from gallery"
 }

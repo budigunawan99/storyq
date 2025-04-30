@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:storyq/common.dart';
 import 'package:storyq/config/web/url_strategy.dart';
 import 'package:storyq/data/api/api_services.dart';
 import 'package:storyq/data/local/auth_repository.dart';
@@ -103,6 +104,8 @@ class _MyAppState extends State<MyApp> {
           routerDelegate: myRouterDelegate,
           routeInformationParser: myRouteInformationParser,
           backButtonDispatcher: RootBackButtonDispatcher(),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           locale: context.watch<LocalizationProvider>().locale,
         );
       },
