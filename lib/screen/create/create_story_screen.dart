@@ -4,11 +4,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:storyq/provider/create/create_story_provider.dart';
+import 'package:storyq/provider/home/story_list_provider.dart';
 import 'package:storyq/screen/common/appbar.dart';
+import 'package:storyq/static/create_story_result_state.dart';
 
 class CreateStoryScreen extends StatefulWidget {
-  const CreateStoryScreen({super.key});
+  final Function onPosted;
+
+  const CreateStoryScreen({super.key, required this.onPosted});
 
   @override
   State<CreateStoryScreen> createState() => _CreateStoryScreenState();
@@ -64,13 +69,14 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
                         Positioned(
                           left: 15,
                           bottom: 15,
-                          child: ElevatedButton(
+                          child: IconButton(
+                            tooltip: "Buka kamera",
                             onPressed: () => _onCameraView(),
-                            style: ElevatedButton.styleFrom(
+                            style: IconButton.styleFrom(
                               backgroundColor:
                                   Theme.of(context).colorScheme.onSurface,
                             ),
-                            child: Icon(
+                            icon: Icon(
                               Icons.add_a_photo_outlined,
                               color: Theme.of(context).colorScheme.surface,
                             ),
@@ -80,13 +86,14 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
                       Positioned(
                         right: 15,
                         bottom: 15,
-                        child: ElevatedButton(
+                        child: IconButton(
+                          tooltip: "Pilih dari galeri",
                           onPressed: () => _onGalleryView(),
-                          style: ElevatedButton.styleFrom(
+                          style: IconButton.styleFrom(
                             backgroundColor:
                                 Theme.of(context).colorScheme.onSurface,
                           ),
-                          child: Icon(
+                          icon: Icon(
                             Icons.browse_gallery_outlined,
                             color: Theme.of(context).colorScheme.surface,
                           ),
@@ -116,30 +123,48 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
 
                 Padding(
                   padding: const EdgeInsets.all(15),
-                  child: ElevatedButton(
-                    onPressed: () async {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.onSurface,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.save_alt_outlined,
-                          color: Theme.of(context).colorScheme.surface,
-                        ),
-                        SizedBox.square(dimension: 8),
-                        Text(
-                          "SIMPAN",
-                          style: Theme.of(
-                            context,
-                          ).textTheme.titleSmall?.copyWith(
-                            color: Theme.of(context).colorScheme.surface,
+                  child:
+                      context.watch<CreateStoryProvider>().resultState
+                              is CreateStoryLoadingState
+                          ? Shimmer.fromColors(
+                            baseColor: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: 0.5),
+                            highlightColor: Colors.grey.withValues(alpha: 0.5),
+                            child: Container(
+                              height: 30,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          )
+                          : ElevatedButton(
+                            onPressed: () => _onUpload(),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.onSurface,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.save_alt_outlined,
+                                  color: Theme.of(context).colorScheme.surface,
+                                ),
+                                SizedBox.square(dimension: 8),
+                                Text(
+                                  "SIMPAN",
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.titleSmall?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.surface,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
                 ),
               ],
             ),
@@ -198,6 +223,7 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
       context,
     );
     final provider = context.read<CreateStoryProvider>();
+    final storyProvider = context.read<StoryListProvider>();
     final imagePath = provider.imagePath;
     final imageFile = provider.imageFile;
     if (imagePath == null || imageFile == null) {
@@ -205,9 +231,34 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
         SnackBar(content: Text("Tidak ada data yang diupload")),
       );
       return;
+    } else if (descriptionController.text.isEmpty) {
+      scaffoldMessengerState.showSnackBar(
+        SnackBar(content: Text("Masukkan deskripsi terlebih dahulu!")),
+      );
+      return;
     }
 
-    final fileName = imageFile.name;
+    final filename = imageFile.name;
     final bytes = await imageFile.readAsBytes();
+    final newBytes = await provider.compressImage(bytes);
+
+    await provider.uploadStory(newBytes, filename, descriptionController.text);
+
+    switch (provider.resultState) {
+      case CreateStoryErrorState(error: var message):
+        scaffoldMessengerState.showSnackBar(
+          SnackBar(content: Text(message), backgroundColor: Colors.red),
+        );
+      case CreateStoryLoadedState():
+        provider.setImageFile(null);
+        provider.setImagePath(null);
+        descriptionController.clear();
+        storyProvider.fetchStoryList();
+        widget.onPosted();
+        scaffoldMessengerState.showSnackBar(
+          SnackBar(content: Text("Data berhasil diupload!")),
+        );
+      default:
+    }
   }
 }

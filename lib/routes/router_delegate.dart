@@ -227,7 +227,12 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
     if (isCreateStoryPage)
       MaterialPage(
         key: const ValueKey("CreateStoryPage"),
-        child: CreateStoryScreen(),
+        child: CreateStoryScreen(
+          onPosted: () {
+            isCreateStoryPage = false;
+            notifyListeners();
+          },
+        ),
       ),
   ];
 }

@@ -53,7 +53,13 @@ void main() async {
                 context.read<AuthRepository>(),
               ),
         ),
-        ChangeNotifierProvider(create: (context) => CreateStoryProvider()),
+        ChangeNotifierProvider(
+          create:
+              (context) => CreateStoryProvider(
+                context.read<ApiServices>(),
+                context.read<AuthRepository>(),
+              ),
+        ),
       ],
       child: const MyApp(),
     ),

@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:storyq/data/model/login_response.dart';
 import 'package:storyq/data/model/register_response.dart';
 import 'package:storyq/data/model/story_detail_response.dart';
 import 'package:storyq/data/model/story_list_response.dart';
+import 'package:storyq/data/model/upload_response.dart';
 import 'package:storyq/data/model/user.dart';
 import 'package:storyq/data/model/user_login.dart';
 
@@ -118,6 +120,60 @@ class ApiServices {
         return StoryDetailResponse.fromJson(jsonDecode(response.body));
       } else {
         throw Exception('Gagal untuk menampilkan detail Story.');
+      }
+    } catch (e) {
+      if (e is SocketException) {
+        throw Exception('Tidak ada koneksi internet. Coba lagi nanti.');
+      } else if (e is TimeoutException) {
+        throw Exception('Waktu habis. Coba lagi nanti.');
+      } else if (e is FormatException) {
+        throw Exception('Gagal loading data. Coba lagi nanti.');
+      } else {
+        throw Exception(e.toString().substring(11));
+      }
+    }
+  }
+
+  Future<UploadResponse> uploadStory(
+    String token,
+    List<int> bytes,
+    String filename,
+    String description,
+  ) async {
+    try {
+      final uri = Uri.parse("$_baseUrl/stories");
+      var request = http.MultipartRequest('POST', uri);
+
+      final multiPartFile = http.MultipartFile.fromBytes(
+        "photo",
+        bytes,
+        filename: filename,
+      );
+
+      final Map<String, String> fields = {"description": description};
+      final Map<String, String> headers = {
+        "Content-type": "multipart/form-data",
+        'Authorization': 'Bearer $token',
+      };
+
+      request.files.add(multiPartFile);
+      request.fields.addAll(fields);
+      request.headers.addAll(headers);
+
+      final http.StreamedResponse streamedResponse = await request.send();
+      final int statusCode = streamedResponse.statusCode;
+
+      final Uint8List responseList = await streamedResponse.stream.toBytes();
+      final String responseData = String.fromCharCodes(responseList);
+
+      if (statusCode == 201) {
+        return UploadResponse.fromJson(jsonDecode(responseData));
+      } else {
+        final message = jsonDecode(responseData)["message"];
+        if (message != null) {
+          throw Exception(message);
+        }
+        throw Exception('Gagal untuk mengupload Story.');
       }
     } catch (e) {
       if (e is SocketException) {

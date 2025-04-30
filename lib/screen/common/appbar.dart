@@ -6,7 +6,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
   final bool isHomePage;
   final String? title;
   final Function()? toSettingsPage;
-  
+
   const Appbar({
     super.key,
     required this.isHomePage,
@@ -24,6 +24,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
           actions: [
             isHomePage
                 ? IconButton(
+                  tooltip: "Pengaturan",
                   onPressed: () {
                     if (toSettingsPage != null) {
                       toSettingsPage!();
@@ -51,6 +52,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
       return Padding(
         padding: const EdgeInsets.only(left: 11.0, right: 11.0),
         child: IconButton(
+          tooltip: "Kembali",
           onPressed: () {
             Navigator.pop(context);
           },
