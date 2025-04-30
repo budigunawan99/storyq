@@ -4,6 +4,7 @@ import 'package:storyq/provider/auth/auth_provider.dart';
 import 'package:storyq/provider/settings/theme_provider.dart';
 import 'package:storyq/screen/common/appbar.dart';
 import 'package:storyq/screen/common/theme_switcher.dart';
+import 'package:storyq/screen/settings/flag_icon_widget.dart';
 import 'package:storyq/static/logout_result_state.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -44,6 +45,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             Divider(height: 2, thickness: 0.5),
             Padding(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: Text(
+                      "Pilih bahasa",
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                  Flexible(flex: 1, child: FlagIconWidget()),
+                ],
+              ),
+            ),
+            Divider(height: 2, thickness: 0.5),
+            Padding(
               padding: const EdgeInsets.all(10),
               child:
                   context.watch<AuthProvider>().logoutResultState
@@ -68,7 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               Icon(
                                 Icons.logout,
                                 color: Theme.of(context).colorScheme.surface,
-                              ),                         
+                              ),
                               Text(
                                 "KELUAR",
                                 style: Theme.of(

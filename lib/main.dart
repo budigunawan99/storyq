@@ -9,6 +9,7 @@ import 'package:storyq/provider/auth/auth_provider.dart';
 import 'package:storyq/provider/create/create_story_provider.dart';
 import 'package:storyq/provider/detail/story_detail_provider.dart';
 import 'package:storyq/provider/home/story_list_provider.dart';
+import 'package:storyq/provider/settings/localizations_provider.dart';
 import 'package:storyq/provider/settings/theme_provider.dart';
 import 'package:storyq/provider/settings/theme_shared_preferences_provider.dart';
 import 'package:storyq/routes/route_information_parser.dart';
@@ -60,6 +61,7 @@ void main() async {
                 context.read<AuthRepository>(),
               ),
         ),
+        ChangeNotifierProvider(create: (context) => LocalizationProvider()),
       ],
       child: const MyApp(),
     ),
@@ -101,6 +103,7 @@ class _MyAppState extends State<MyApp> {
           routerDelegate: myRouterDelegate,
           routeInformationParser: myRouteInformationParser,
           backButtonDispatcher: RootBackButtonDispatcher(),
+          locale: context.watch<LocalizationProvider>().locale,
         );
       },
     );
