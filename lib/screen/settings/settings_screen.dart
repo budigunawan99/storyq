@@ -10,7 +10,13 @@ import 'package:storyq/static/logout_result_state.dart';
 
 class SettingsScreen extends StatefulWidget {
   final Function() onLogout;
-  const SettingsScreen({super.key, required this.onLogout});
+  final Function() onPop;
+
+  const SettingsScreen({
+    super.key,
+    required this.onLogout,
+    required this.onPop,
+  });
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -23,6 +29,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: Appbar(
         isHomePage: false,
         title: AppLocalizations.of(context)!.settingsMenu,
+        onPop: widget.onPop,
       ),
       body: SingleChildScrollView(
         child: Column(

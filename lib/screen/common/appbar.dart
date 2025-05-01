@@ -7,12 +7,14 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
   final bool isHomePage;
   final String? title;
   final Function()? toSettingsPage;
+  final Function()? onPop;
 
   const Appbar({
     super.key,
     required this.isHomePage,
     this.title,
     this.toSettingsPage,
+    this.onPop,
   });
 
   @override
@@ -55,7 +57,9 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
         child: IconButton(
           tooltip: AppLocalizations.of(context)!.backButtonMenu,
           onPressed: () {
-            Navigator.pop(context);
+            if (onPop != null) {
+              onPop!();
+            }
           },
           icon: Icon(
             Icons.arrow_back,

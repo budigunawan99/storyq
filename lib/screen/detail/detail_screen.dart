@@ -9,8 +9,9 @@ import 'package:storyq/static/story_detail_result_state.dart';
 
 class DetailScreen extends StatefulWidget {
   final String storyId;
+  final Function() onPop;
 
-  const DetailScreen({super.key, required this.storyId});
+  const DetailScreen({super.key, required this.storyId, required this.onPop});
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
@@ -29,7 +30,7 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Appbar(isHomePage: false, title: "Stories"),
+      appBar: Appbar(isHomePage: false, title: "Stories", onPop: widget.onPop),
       body: CustomScrollView(
         slivers: [
           Consumer<StoryDetailProvider>(

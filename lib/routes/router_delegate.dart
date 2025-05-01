@@ -153,8 +153,16 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
     notifyListeners();
   }
 
-  List<Page> get _unknownStack => const [
-    MaterialPage(key: ValueKey("UnknownPage"), child: UnknownScreen()),
+  List<Page> get _unknownStack => [
+    MaterialPage(
+      key: const ValueKey("UnknownPage"),
+      child: UnknownScreen(
+        onPop: () {
+          isUnknown = false;
+          notifyListeners();
+        },
+      ),
+    ),
   ];
 
   List<Page> get _splashStack => const [
@@ -210,7 +218,13 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
     if (selectedStory != null)
       MaterialPage(
         key: ValueKey("DetailPage-$selectedStory"),
-        child: DetailScreen(storyId: selectedStory!),
+        child: DetailScreen(
+          storyId: selectedStory!,
+          onPop: () {
+            selectedStory = null;
+            notifyListeners();
+          },
+        ),
       ),
 
     if (isSettingsPage)
@@ -221,6 +235,10 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
             isLoggedIn = false;
             notifyListeners();
           },
+          onPop: () {
+            isSettingsPage = false;
+            notifyListeners();
+          },
         ),
       ),
 
@@ -229,6 +247,10 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
         key: const ValueKey("CreateStoryPage"),
         child: CreateStoryScreen(
           onPosted: () {
+            isCreateStoryPage = false;
+            notifyListeners();
+          },
+          onPop: () {
             isCreateStoryPage = false;
             notifyListeners();
           },

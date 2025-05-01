@@ -13,8 +13,13 @@ import 'package:storyq/static/create_story_result_state.dart';
 
 class CreateStoryScreen extends StatefulWidget {
   final Function onPosted;
+  final Function() onPop;
 
-  const CreateStoryScreen({super.key, required this.onPosted});
+  const CreateStoryScreen({
+    super.key,
+    required this.onPosted,
+    required this.onPop,
+  });
 
   @override
   State<CreateStoryScreen> createState() => _CreateStoryScreenState();
@@ -35,6 +40,7 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
       appBar: Appbar(
         isHomePage: false,
         title: AppLocalizations.of(context)!.createStoryMenu,
+        onPop: widget.onPop,
       ),
       body: CustomScrollView(
         slivers: [
