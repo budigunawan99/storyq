@@ -44,7 +44,7 @@ class AuthRepository {
   }
 
   Future<bool> isLoggedIn() async {
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 3));
     return _preferences.getBool(stateKey) ?? false;
   }
 

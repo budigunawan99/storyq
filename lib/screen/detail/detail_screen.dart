@@ -132,17 +132,102 @@ class _DetailScreenState extends State<DetailScreen> {
 
                       story.lat != null &&
                               story.lon != null &&
-                              defaultTargetPlatform == TargetPlatform.android &&
-                              defaultTargetPlatform == TargetPlatform.iOS &&
-                              kIsWeb
-                          ? SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.width,
-                            child: GoogleMap(
-                              initialCameraPosition: CameraPosition(
-                                target: LatLng(story.lat!, story.lon!),
+                              (defaultTargetPlatform ==
+                                      TargetPlatform.android ||
+                                  defaultTargetPlatform == TargetPlatform.iOS ||
+                                  kIsWeb)
+                          ? Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: 15,
+                                  right: 15,
+                                  bottom: 15,
+                                ),
+                                child: Text(
+                                  value.address ?? '',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
                               ),
-                            ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                height: MediaQuery.of(context).size.width,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 15,
+                                    right: 15,
+                                    bottom: 15,
+                                  ),
+                                  child: Stack(
+                                    children: [
+                                      GoogleMap(
+                                        markers: value.markers,
+                                        initialCameraPosition: CameraPosition(
+                                          zoom: 18,
+                                          target: LatLng(
+                                            story.lat!,
+                                            story.lon!,
+                                          ),
+                                        ),
+                                        onMapCreated: (controller) {
+                                          value.setMapController(controller);
+                                        },
+                                        myLocationButtonEnabled: false,
+                                        zoomControlsEnabled: false,
+                                        mapToolbarEnabled: false,
+                                      ),
+
+                                      Positioned(
+                                        bottom: 16,
+                                        right: 16,
+                                        child: Column(
+                                          children: [
+                                            FloatingActionButton.small(
+                                              heroTag: "zoom-in",
+                                              onPressed: () {
+                                                if (value.mapController !=
+                                                    null) {
+                                                  value.mapController!
+                                                      .animateCamera(
+                                                        CameraUpdate.zoomIn(),
+                                                      );
+                                                }
+                                              },
+                                              child: Icon(
+                                                Icons.add,
+                                                color:
+                                                    Theme.of(
+                                                      context,
+                                                    ).colorScheme.surface,
+                                              ),
+                                            ),
+                                            FloatingActionButton.small(
+                                              heroTag: "zoom-out",
+                                              onPressed: () {
+                                                if (value.mapController !=
+                                                    null) {
+                                                  value.mapController!
+                                                      .animateCamera(
+                                                        CameraUpdate.zoomOut(),
+                                                      );
+                                                }
+                                              },
+                                              child: Icon(
+                                                Icons.remove,
+                                                color:
+                                                    Theme.of(
+                                                      context,
+                                                    ).colorScheme.surface,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           )
                           : Padding(
                             padding: const EdgeInsets.only(
