@@ -78,10 +78,15 @@ class ApiServices {
     }
   }
 
-  Future<StoryListResponse> getStoryList(String token) async {
+  Future<StoryListResponse> getStoryList(
+    String token, [
+    int page = 1,
+    int size = 10,
+    int location = 0,
+  ]) async {
     try {
       final response = await http.get(
-        Uri.parse("$_baseUrl/stories"),
+        Uri.parse("$_baseUrl/stories?page=$page&size=$size&location=$location"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $token',

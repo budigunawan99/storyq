@@ -24,12 +24,30 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final ScrollController scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent) {
+        if (context.read<StoryListProvider>().page != null) {
+          context.read<StoryListProvider>().fetchStoryList();
+        }
+      }
+    });
+
     Future.microtask(() {
       context.read<StoryListProvider>().fetchStoryList();
     });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -44,6 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: const Icon(Icons.add, size: 28),
       ),
       body: CustomScrollView(
+        controller: scrollController,
         slivers: [
           Consumer<StoryListProvider>(
             builder: (context, value, child) {
@@ -56,8 +75,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 StoryListLoadedState(data: var storyList) =>
                   SliverList.separated(
-                    itemCount: storyList.length,
+                    itemCount: storyList.length + (value.page != null ? 1 : 0),
                     itemBuilder: (context, index) {
+                      if (index == storyList.length && value.page != null) {
+                        return SizedBox(
+                          height: MediaQuery.of(context).size.width,
+                          child: SkeletonLoading(count: 1),
+                        );
+                      }
                       final story = storyList[index];
                       return InkWell(
                         child: StoryListItem(story: story),
