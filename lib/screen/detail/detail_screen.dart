@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:storyq/common.dart';
@@ -119,6 +121,67 @@ class _DetailScreenState extends State<DetailScreen> {
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
+
+                      Padding(
+                        padding: EdgeInsets.all(15),
+                        child: Text(
+                          "Lokasi",
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ),
+
+                      story.lat != null &&
+                              story.lon != null &&
+                              defaultTargetPlatform == TargetPlatform.android &&
+                              defaultTargetPlatform == TargetPlatform.iOS &&
+                              kIsWeb
+                          ? SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.width,
+                            child: GoogleMap(
+                              initialCameraPosition: CameraPosition(
+                                target: LatLng(story.lat!, story.lon!),
+                              ),
+                            ),
+                          )
+                          : Padding(
+                            padding: const EdgeInsets.only(
+                              left: 15,
+                              right: 15,
+                              bottom: 15,
+                            ),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(15),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.not_listed_location_outlined,
+                                      size: 40,
+                                      color:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.onSurface,
+                                    ),
+                                    Text(
+                                      "Tidak ada data lokasi / lokasi tidak didukung",
+                                      style:
+                                          Theme.of(
+                                            context,
+                                          ).textTheme.bodyMedium,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                     ],
                   ),
                 ),
