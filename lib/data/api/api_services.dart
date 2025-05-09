@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:storyq/data/model/login_response.dart';
 import 'package:storyq/data/model/register_response.dart';
@@ -143,8 +144,9 @@ class ApiServices {
     String token,
     List<int> bytes,
     String filename,
-    String description,
-  ) async {
+    String description, [
+    LatLng? latLng,
+  ]) async {
     try {
       final uri = Uri.parse("$_baseUrl/stories");
       var request = http.MultipartRequest('POST', uri);
@@ -155,7 +157,16 @@ class ApiServices {
         filename: filename,
       );
 
-      final Map<String, String> fields = {"description": description};
+      Map<String, String> fields = {"description": description};
+
+      if (latLng != null) {
+        fields = {
+          ...fields,
+          "lat": latLng.latitude.toString(),
+          "lon": latLng.longitude.toString(),
+        };
+      }
+
       final Map<String, String> headers = {
         "Content-type": "multipart/form-data",
         'Authorization': 'Bearer $token',

@@ -27,10 +27,23 @@ class CreateStoryScreen extends StatefulWidget {
 
 class _CreateStoryScreenState extends State<CreateStoryScreen> {
   final descriptionController = TextEditingController();
+  final addressController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    final provider = context.read<CreateStoryProvider>();
+    Future.microtask(() {
+      provider.getMyLocation();
+      addressController.text =
+          provider.myAddress ?? "Lokasi Anda tidak terdeteksi";
+    });
+  }
 
   @override
   void dispose() {
     descriptionController.dispose();
+    addressController.dispose();
     super.dispose();
   }
 
@@ -114,6 +127,27 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
                   ),
                 ),
 
+                Consumer<CreateStoryProvider>(
+                  builder: (context, value, child) {
+                    if (value.myAddress != null) {
+                      addressController.text = value.myAddress!;
+                    }
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 15,
+                        horizontal: 15,
+                      ),
+                      child: TextField(
+                        controller: addressController,
+                        enabled: false,
+                        maxLines: null,
+                        decoration: InputDecoration(border: InputBorder.none),
+                      ),
+                    );
+                  },
+                ),
+
                 SizedBox(
                   height: 0.3 * MediaQuery.of(context).size.height,
                   child: Padding(
@@ -123,8 +157,9 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
                     ),
                     child: TextField(
                       controller: descriptionController,
+                      maxLines: 6,
                       decoration: InputDecoration(
-                        border: InputBorder.none,
+                        border: OutlineInputBorder(),
                         hintText: AppLocalizations.of(context)!.descriptionHint,
                         hintStyle: Theme.of(context).textTheme.labelLarge,
                       ),
@@ -253,7 +288,12 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
     final bytes = await imageFile.readAsBytes();
     final newBytes = await provider.compressImage(bytes);
 
-    await provider.uploadStory(newBytes, filename, descriptionController.text);
+    await provider.uploadStory(
+      newBytes,
+      filename,
+      descriptionController.text,
+      provider.myLatLng,
+    );
 
     switch (provider.resultState) {
       case CreateStoryErrorState(error: var message):

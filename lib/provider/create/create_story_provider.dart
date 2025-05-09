@@ -1,8 +1,11 @@
 import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart';
+import 'package:geocoding/geocoding.dart' as geo;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:location/location.dart';
 import 'package:storyq/data/api/api_services.dart';
 import 'package:storyq/data/local/auth_repository.dart';
 import 'package:storyq/static/create_story_result_state.dart';
@@ -30,10 +33,57 @@ class CreateStoryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  String? _myAddress;
+  String? get myAddress => _myAddress;
+
+  LatLng? _myLatLng;
+  LatLng? get myLatLng => _myLatLng;
+
+  Future<geo.Placemark> getAddressByLatLng(LatLng latLng) async {
+    final info = await geo.placemarkFromCoordinates(
+      latLng.latitude,
+      latLng.longitude,
+    );
+    return info[0];
+  }
+
+  Future<void> getMyLocation() async {
+    final Location location = Location();
+    late bool serviceEnabled;
+    late PermissionStatus permissionGranted;
+    late LocationData locationData;
+
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        _myAddress = "Layanan lokasi tidak tersedia.";
+        return;
+      }
+    }
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        _myAddress = "Izin lokasi ditolak.";
+        return;
+      }
+    }
+
+    locationData = await location.getLocation();
+    final latLng = LatLng(locationData.latitude!, locationData.longitude!);
+    final place = await getAddressByLatLng(latLng);
+    _myLatLng = latLng;
+    _myAddress =
+        '${place.street}, ${place.administrativeArea}, ${place.country}';
+    notifyListeners();
+  }
+
   Future<void> uploadStory(
     List<int> bytes,
     String filename,
     String description,
+    LatLng? latLng,
   ) async {
     try {
       _resultState = CreateStoryLoadingState();
@@ -52,6 +102,7 @@ class CreateStoryProvider extends ChangeNotifier {
         bytes,
         filename,
         description,
+        latLng,
       );
 
       if (result.error) {
