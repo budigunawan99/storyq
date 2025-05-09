@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: Appbar(isHomePage: true, toSettingsPage: widget.toSettingsPage),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           widget.toCreateStoryPage();
         },
         tooltip: AppLocalizations.of(context)!.createStoryMenu,

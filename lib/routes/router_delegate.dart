@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:storyq/data/local/auth_repository.dart';
 import 'package:storyq/data/model/page_configuration.dart';
 import 'package:storyq/screen/common/unknown_screen.dart';
+import 'package:storyq/screen/create/choose_location_screen.dart';
 import 'package:storyq/screen/create/create_story_screen.dart';
 import 'package:storyq/screen/detail/detail_screen.dart';
 import 'package:storyq/screen/home/home_screen.dart';
@@ -36,6 +37,7 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
 
   bool isSettingsPage = false;
   bool isCreateStoryPage = false;
+  bool isChooseLocationPage = false;
 
   bool? isUnknown;
 
@@ -71,6 +73,10 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
           isCreateStoryPage = false;
           notifyListeners();
         }
+        if (page.key == const ValueKey("ChooseLocationPage")) {
+          isChooseLocationPage = false;
+          notifyListeners();
+        }
         if (page.key == const ValueKey("UnknownPage")) {
           isUnknown = false;
           notifyListeners();
@@ -93,6 +99,8 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
       return SettingsPageConfiguration();
     } else if (isCreateStoryPage == true) {
       return CreateStoryPageConfiguration();
+    } else if (isChooseLocationPage == true) {
+      return ChooseLocationPageConfiguration();
     } else if (selectedStory == null) {
       return HomePageConfiguration();
     } else if (selectedStory != null) {
@@ -110,12 +118,14 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
         isRegister = false;
         isSettingsPage = false;
         isCreateStoryPage = false;
+        isChooseLocationPage = false;
         break;
       case RegisterPageConfiguration():
         isUnknown = false;
         selectedStory = null;
         isSettingsPage = false;
         isCreateStoryPage = false;
+        isChooseLocationPage = false;
         isRegister = true;
         break;
       case HomePageConfiguration() ||
@@ -126,12 +136,14 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
         isRegister = false;
         isSettingsPage = false;
         isCreateStoryPage = false;
+        isChooseLocationPage = false;
         break;
       case DetailPageConfiguration():
         isUnknown = false;
         isRegister = false;
         isSettingsPage = false;
         isCreateStoryPage = false;
+        isChooseLocationPage = false;
         selectedStory = configuration.storyId.toString();
         break;
       case SettingsPageConfiguration():
@@ -139,6 +151,7 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
         isRegister = false;
         selectedStory = null;
         isCreateStoryPage = false;
+        isChooseLocationPage = false;
         isSettingsPage = true;
         break;
       case CreateStoryPageConfiguration():
@@ -146,7 +159,16 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
         isRegister = false;
         selectedStory = null;
         isSettingsPage = false;
+        isChooseLocationPage = false;
         isCreateStoryPage = true;
+        break;
+      case ChooseLocationPageConfiguration():
+        isUnknown = false;
+        isRegister = false;
+        selectedStory = null;
+        isSettingsPage = false;
+        isChooseLocationPage = true;
+        isCreateStoryPage = false;
         break;
     }
 
@@ -252,6 +274,25 @@ class MyRouterDelegate extends RouterDelegate<PageConfiguration>
           },
           onPop: () {
             isCreateStoryPage = false;
+            notifyListeners();
+          },
+          toChooseLocationPage: () {
+            isChooseLocationPage = true;
+            notifyListeners();
+          },
+        ),
+      ),
+
+    if (isChooseLocationPage)
+      MaterialPage(
+        key: const ValueKey("ChooseLocationPage"),
+        child: ChooseLocationScreen(
+          onSubmit: () {
+            isChooseLocationPage = false;
+            notifyListeners();
+          },
+          onPop: () {
+            isChooseLocationPage = false;
             notifyListeners();
           },
         ),

@@ -15,8 +15,19 @@ class StoryListProvider extends ChangeNotifier {
   StoryListResultState get resultState => _resultState;
 
   int? page = 1;
+
+  void setPage(int value) {
+    page = value;
+    notifyListeners();
+  }
+
   int size = 10;
   final List<Story> appendedStory = [];
+
+  void removeAllStories() {
+    appendedStory.clear();
+    notifyListeners();
+  }
 
   Future<void> fetchStoryList() async {
     try {

@@ -39,6 +39,25 @@ class CreateStoryProvider extends ChangeNotifier {
   LatLng? _myLatLng;
   LatLng? get myLatLng => _myLatLng;
 
+  String? _tempAddress;
+  String? get tempAddress => _tempAddress;
+
+  LatLng? _tempLatLng;
+  LatLng? get tempLatLng => _tempLatLng;
+
+  Future<void> setTempAddressAndLatLng(LatLng latLng) async {
+    _tempLatLng = latLng;
+    final place = await getAddressByLatLng(latLng);
+    _tempAddress =
+        '${place.street}, ${place.administrativeArea}, ${place.country}';
+    notifyListeners();
+  }
+
+  void setMyLocation() {
+    _myLatLng = _tempLatLng;
+    _myAddress = _tempAddress;
+  }
+
   Future<geo.Placemark> getAddressByLatLng(LatLng latLng) async {
     final info = await geo.placemarkFromCoordinates(
       latLng.latitude,
@@ -76,6 +95,28 @@ class CreateStoryProvider extends ChangeNotifier {
     _myLatLng = latLng;
     _myAddress =
         '${place.street}, ${place.administrativeArea}, ${place.country}';
+    notifyListeners();
+  }
+
+  GoogleMapController? _mapController;
+  GoogleMapController? get mapController => _mapController;
+
+  void setMapController(GoogleMapController controller) {
+    _mapController = controller;
+    notifyListeners();
+  }
+
+  final Set<Marker> _markers = {};
+  Set<Marker> get markers => _markers;
+
+  void setMarkers(Marker marker) {
+    _markers.clear();
+    _markers.add(marker);
+    notifyListeners();
+  }
+
+  void setResultState(CreateStoryResultState value) {
+    _resultState = value;
     notifyListeners();
   }
 

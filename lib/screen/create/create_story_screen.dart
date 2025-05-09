@@ -14,11 +14,13 @@ import 'package:storyq/static/create_story_result_state.dart';
 class CreateStoryScreen extends StatefulWidget {
   final Function onPosted;
   final Function() onPop;
+  final Function() toChooseLocationPage;
 
   const CreateStoryScreen({
     super.key,
     required this.onPosted,
     required this.onPop,
+    required this.toChooseLocationPage,
   });
 
   @override
@@ -36,7 +38,7 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
     Future.microtask(() {
       provider.getMyLocation();
       addressController.text =
-          provider.myAddress ?? "Lokasi Anda tidak terdeteksi";
+          provider.myAddress ?? "Sedang mencari lokasi ...";
     });
   }
 
@@ -58,82 +60,87 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
-            child: Column(
-              children: [
-                ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: 0.75 * MediaQuery.of(context).size.width,
-                    minHeight: 0.25 * MediaQuery.of(context).size.width,
-                    maxWidth: MediaQuery.of(context).size.width,
-                    minWidth: MediaQuery.of(context).size.width,
-                  ),
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxHeight: 0.75 * MediaQuery.of(context).size.width,
-                            minHeight: 0.25 * MediaQuery.of(context).size.width,
-                            maxWidth: MediaQuery.of(context).size.width,
-                            minWidth: MediaQuery.of(context).size.width,
-                          ),
-                          child:
-                              context.watch<CreateStoryProvider>().imagePath ==
-                                      null
-                                  ? Image.asset(
-                                    'assets/images/img_default.png',
-                                    fit: BoxFit.cover,
-                                  )
-                                  : _showImage(),
-                        ),
+            child: Consumer<CreateStoryProvider>(
+              builder: (context, value, child) {
+                if (value.myAddress != null) {
+                  addressController.text = value.myAddress!;
+                }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight: 0.75 * MediaQuery.of(context).size.width,
+                        minHeight: 0.25 * MediaQuery.of(context).size.width,
+                        maxWidth: MediaQuery.of(context).size.width,
+                        minWidth: MediaQuery.of(context).size.width,
                       ),
-
-                      if (!isNotMobile())
-                        Positioned(
-                          left: 15,
-                          bottom: 15,
-                          child: IconButton(
-                            tooltip:
-                                AppLocalizations.of(context)!.cameraTooltip,
-                            onPressed: () => _onCameraView(),
-                            style: IconButton.styleFrom(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.onSurface,
-                            ),
-                            icon: Icon(
-                              Icons.add_a_photo_outlined,
-                              color: Theme.of(context).colorScheme.surface,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxHeight:
+                                    0.75 * MediaQuery.of(context).size.width,
+                                minHeight:
+                                    0.25 * MediaQuery.of(context).size.width,
+                                maxWidth: MediaQuery.of(context).size.width,
+                                minWidth: MediaQuery.of(context).size.width,
+                              ),
+                              child:
+                                  context
+                                              .watch<CreateStoryProvider>()
+                                              .imagePath ==
+                                          null
+                                      ? Image.asset(
+                                        'assets/images/img_default.png',
+                                        fit: BoxFit.cover,
+                                      )
+                                      : _showImage(),
                             ),
                           ),
-                        ),
 
-                      Positioned(
-                        right: 15,
-                        bottom: 15,
-                        child: IconButton(
-                          tooltip: AppLocalizations.of(context)!.galleryTooltip,
-                          onPressed: () => _onGalleryView(),
-                          style: IconButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.onSurface,
+                          if (!isNotMobile())
+                            Positioned(
+                              left: 15,
+                              bottom: 15,
+                              child: IconButton(
+                                tooltip:
+                                    AppLocalizations.of(context)!.cameraTooltip,
+                                onPressed: () => _onCameraView(),
+                                style: IconButton.styleFrom(
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.onSurface,
+                                ),
+                                icon: Icon(
+                                  Icons.add_a_photo_outlined,
+                                  color: Theme.of(context).colorScheme.surface,
+                                ),
+                              ),
+                            ),
+
+                          Positioned(
+                            right: 15,
+                            bottom: 15,
+                            child: IconButton(
+                              tooltip:
+                                  AppLocalizations.of(context)!.galleryTooltip,
+                              onPressed: () => _onGalleryView(),
+                              style: IconButton.styleFrom(
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.onSurface,
+                              ),
+                              icon: Icon(
+                                Icons.browse_gallery_outlined,
+                                color: Theme.of(context).colorScheme.surface,
+                              ),
+                            ),
                           ),
-                          icon: Icon(
-                            Icons.browse_gallery_outlined,
-                            color: Theme.of(context).colorScheme.surface,
-                          ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
 
-                Consumer<CreateStoryProvider>(
-                  builder: (context, value, child) {
-                    if (value.myAddress != null) {
-                      addressController.text = value.myAddress!;
-                    }
-
-                    return Padding(
+                    Padding(
                       padding: const EdgeInsets.symmetric(
                         vertical: 15,
                         horizontal: 15,
@@ -144,63 +151,43 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
                         maxLines: null,
                         decoration: InputDecoration(border: InputBorder.none),
                       ),
-                    );
-                  },
-                ),
-
-                SizedBox(
-                  height: 0.3 * MediaQuery.of(context).size.height,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 0,
-                      horizontal: 15,
                     ),
-                    child: TextField(
-                      controller: descriptionController,
-                      maxLines: 6,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: AppLocalizations.of(context)!.descriptionHint,
-                        hintStyle: Theme.of(context).textTheme.labelLarge,
+
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 15,
+                        right: 15,
+                        bottom: 15,
                       ),
-                    ),
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child:
-                      context.watch<CreateStoryProvider>().resultState
-                              is CreateStoryLoadingState
-                          ? Shimmer.fromColors(
-                            baseColor: Theme.of(
-                              context,
-                            ).colorScheme.onSurface.withValues(alpha: 0.5),
-                            highlightColor: Colors.grey.withValues(alpha: 0.5),
-                            child: Container(
-                              height: 45,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: Theme.of(context).colorScheme.onSurface,
+                      child: SizedBox(
+                        width: 0.5 * MediaQuery.of(context).size.width,
+                        child: ElevatedButton(
+                          onPressed:
+                              value.myLatLng != null &&
+                                      (defaultTargetPlatform ==
+                                              TargetPlatform.android ||
+                                          defaultTargetPlatform ==
+                                              TargetPlatform.iOS ||
+                                          kIsWeb)
+                                  ? () {
+                                    widget.toChooseLocationPage();
+                                  }
+                                  : null,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.onSurface,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.location_searching,
+                                color: Theme.of(context).colorScheme.surface,
                               ),
-                            ),
-                          )
-                          : ElevatedButton(
-                            onPressed: () => _onUpload(),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.onSurface,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.save_alt_outlined,
-                                  color: Theme.of(context).colorScheme.surface,
-                                ),
-                                SizedBox.square(dimension: 8),
-                                Text(
-                                  AppLocalizations.of(context)!.saveButton,
+                              SizedBox.square(dimension: 8),
+                              Expanded(
+                                child: Text(
+                                  "Pilih lokasi",
                                   style: Theme.of(
                                     context,
                                   ).textTheme.titleSmall?.copyWith(
@@ -208,11 +195,86 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
                                         Theme.of(context).colorScheme.surface,
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                ),
-              ],
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: 0.3 * MediaQuery.of(context).size.height,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 0,
+                          horizontal: 15,
+                        ),
+                        child: TextField(
+                          controller: descriptionController,
+                          maxLines: 7,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText:
+                                AppLocalizations.of(context)!.descriptionHint,
+                            hintStyle: Theme.of(context).textTheme.labelLarge,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.all(15),
+                      child:
+                          value.resultState is CreateStoryLoadingState
+                              ? Shimmer.fromColors(
+                                baseColor: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withValues(alpha: 0.5),
+                                highlightColor: Colors.grey.withValues(
+                                  alpha: 0.5,
+                                ),
+                                child: Container(
+                                  height: 45,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
+                                  ),
+                                ),
+                              )
+                              : ElevatedButton(
+                                onPressed: () => _onUpload(),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.onSurface,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.save_alt_outlined,
+                                      color:
+                                          Theme.of(context).colorScheme.surface,
+                                    ),
+                                    SizedBox.square(dimension: 8),
+                                    Text(
+                                      AppLocalizations.of(context)!.saveButton,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleSmall?.copyWith(
+                                        color:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.surface,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ],
@@ -284,6 +346,8 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
       return;
     }
 
+    provider.setResultState(CreateStoryLoadingState());
+
     final filename = imageFile.name;
     final bytes = await imageFile.readAsBytes();
     final newBytes = await provider.compressImage(bytes);
@@ -304,6 +368,8 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
         provider.setImageFile(null);
         provider.setImagePath(null);
         descriptionController.clear();
+        storyProvider.removeAllStories();
+        storyProvider.setPage(1);
         storyProvider.fetchStoryList();
         widget.onPosted();
         scaffoldMessengerState.showSnackBar(

@@ -25,6 +25,8 @@ class MyRouteInformationParser
         return SettingsPageConfiguration();
       } else if (first == 'create-story') {
         return CreateStoryPageConfiguration();
+      } else if (first == 'choose-location') {
+        return ChooseLocationPageConfiguration();
       } else {
         return UnknownPageConfiguration();
       }
@@ -58,6 +60,9 @@ class MyRouteInformationParser
       ),
       CreateStoryPageConfiguration() => RouteInformation(
         uri: Uri.parse("/create-story"),
+      ),
+      ChooseLocationPageConfiguration() => RouteInformation(
+        uri: Uri.parse("/choose-location"),
       ),
       DetailPageConfiguration() => RouteInformation(
         uri: Uri.parse("/detail/${configuration.storyId}"),
