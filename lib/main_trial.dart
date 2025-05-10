@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:storyq/common.dart';
+import 'package:storyq/app.dart';
+import 'package:storyq/config/flavor/flavor_config.dart';
 import 'package:storyq/config/web/url_strategy.dart';
 import 'package:storyq/data/api/api_services.dart';
 import 'package:storyq/data/local/auth_repository.dart';
@@ -13,11 +14,12 @@ import 'package:storyq/provider/home/story_list_provider.dart';
 import 'package:storyq/provider/settings/localizations_provider.dart';
 import 'package:storyq/provider/settings/theme_provider.dart';
 import 'package:storyq/provider/settings/theme_shared_preferences_provider.dart';
-import 'package:storyq/routes/route_information_parser.dart';
-import 'package:storyq/routes/router_delegate.dart';
-import 'package:storyq/style/theme/storyq_theme.dart';
 
 void main() async {
+  FlavorConfig(
+    flavor: FlavorType.trial,
+    values: const FlavorValues(titleApp: "Storyq Trial"),
+  );
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   usePathUrlStrategy();
@@ -67,48 +69,4 @@ void main() async {
       child: const MyApp(),
     ),
   );
-}
-
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  late MyRouterDelegate myRouterDelegate;
-  late MyRouteInformationParser myRouteInformationParser;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final authRepository = context.read<AuthRepository>();
-
-    myRouterDelegate = MyRouterDelegate(authRepository);
-    myRouteInformationParser = MyRouteInformationParser();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(
-      builder: (context, themeProvider, child) {
-        return MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          title: "storyq",
-          themeMode:
-              themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-          theme: StoryqTheme.lightTheme,
-          darkTheme: StoryqTheme.darkTheme,
-          routerDelegate: myRouterDelegate,
-          routeInformationParser: myRouteInformationParser,
-          backButtonDispatcher: RootBackButtonDispatcher(),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          locale: context.watch<LocalizationProvider>().locale,
-        );
-      },
-    );
-  }
 }

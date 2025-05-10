@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:storyq/common.dart';
+import 'package:storyq/config/flavor/flavor_config.dart';
 import 'package:storyq/provider/create/create_story_provider.dart';
 import 'package:storyq/provider/home/story_list_provider.dart';
 import 'package:storyq/screen/common/appbar.dart';
@@ -34,11 +35,13 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
   @override
   void initState() {
     super.initState();
-    final provider = context.read<CreateStoryProvider>();
-    Future.microtask(() {
-      provider.getMyLocation();
-      addressController.text = provider.myAddress ?? "Loading...";
-    });
+    if (FlavorConfig.instance.flavor == FlavorType.pro) {
+      final provider = context.read<CreateStoryProvider>();
+      Future.microtask(() {
+        provider.getMyLocation();
+        addressController.text = provider.myAddress ?? "Loading...";
+      });
+    }
   }
 
   @override
@@ -148,77 +151,75 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
                       ),
                     ),
 
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 15,
-                        horizontal: 15,
+                    if (FlavorConfig.instance.flavor == FlavorType.pro) ...[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                          horizontal: 15,
+                        ),
+                        child: TextField(
+                          controller: addressController,
+                          enabled: false,
+                          maxLines: null,
+                          decoration: InputDecoration(border: InputBorder.none),
+                        ),
                       ),
-                      child: TextField(
-                        controller: addressController,
-                        enabled: false,
-                        maxLines: null,
-                        decoration: InputDecoration(border: InputBorder.none),
-                      ),
-                    ),
 
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 15,
-                        right: 15,
-                        bottom: 15,
-                      ),
-                      child: SizedBox(
-                        width: 0.5 * MediaQuery.of(context).size.width,
-                        child: ElevatedButton(
-                          onPressed:
-                              value.myLatLng != null &&
-                                      (defaultTargetPlatform ==
-                                              TargetPlatform.android ||
-                                          defaultTargetPlatform ==
-                                              TargetPlatform.iOS ||
-                                          kIsWeb)
-                                  ? () {
-                                    widget.toChooseLocationPage();
-                                  }
-                                  : null,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.onSurface,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.location_searching,
-                                color: Theme.of(context).colorScheme.surface,
-                              ),
-                              SizedBox.square(dimension: 8),
-                              Expanded(
-                                child: Text(
-                                  AppLocalizations.of(
-                                    context,
-                                  )!.chooseLocationMenu,
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.titleSmall?.copyWith(
-                                    color:
-                                        Theme.of(context).colorScheme.surface,
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 15,
+                          right: 15,                         
+                        ),
+                        child: SizedBox(
+                          width: 0.5 * MediaQuery.of(context).size.width,
+                          child: ElevatedButton(
+                            onPressed:
+                                value.myLatLng != null &&
+                                        (defaultTargetPlatform ==
+                                                TargetPlatform.android ||
+                                            defaultTargetPlatform ==
+                                                TargetPlatform.iOS ||
+                                            kIsWeb)
+                                    ? () {
+                                      widget.toChooseLocationPage();
+                                    }
+                                    : null,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.onSurface,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.location_searching,
+                                  color: Theme.of(context).colorScheme.surface,
+                                ),
+                                SizedBox.square(dimension: 8),
+                                Expanded(
+                                  child: Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.chooseLocationMenu,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.titleSmall?.copyWith(
+                                      color:
+                                          Theme.of(context).colorScheme.surface,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                    ],
 
                     SizedBox(
                       height: 0.3 * MediaQuery.of(context).size.height,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 0,
-                          horizontal: 15,
-                        ),
+                        padding: const EdgeInsets.all(15),
                         child: TextField(
                           controller: descriptionController,
                           maxLines: 7,

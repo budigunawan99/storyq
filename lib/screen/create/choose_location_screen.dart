@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:storyq/common.dart';
+import 'package:storyq/config/flavor/flavor_config.dart';
 import 'package:storyq/provider/create/create_story_provider.dart';
 import 'package:storyq/screen/common/appbar.dart';
 
@@ -20,6 +21,14 @@ class ChooseLocationScreen extends StatefulWidget {
 }
 
 class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (FlavorConfig.instance.flavor != FlavorType.pro) {
+      widget.onPop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
