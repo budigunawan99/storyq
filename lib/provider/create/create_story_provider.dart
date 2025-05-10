@@ -82,18 +82,22 @@ class CreateStoryProvider extends ChangeNotifier {
     if (!serviceEnabled) {
       serviceEnabled = await location.requestService();
       if (!serviceEnabled) {
-        _myAddress = "Layanan lokasi tidak tersedia.";
+        _isServiceEnabled = serviceEnabled;
+        _myAddress = null;
+        notifyListeners();
         return;
       }
     }
-    
+
     _isServiceEnabled = serviceEnabled;
 
     permissionGranted = await location.hasPermission();
     if (permissionGranted == PermissionStatus.denied) {
       permissionGranted = await location.requestPermission();
       if (permissionGranted != PermissionStatus.granted) {
-        _myAddress = "Izin lokasi ditolak.";
+        _isPermissionGranted = false;
+        _myAddress = null;
+        notifyListeners();
         return;
       }
     }

@@ -1,21 +1,17 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:storyq/data/model/story.dart';
 
-class StoryDetailResponse {
-  final bool error;
-  final String message;
-  final Story story;
+part 'story_detail_response.g.dart';
+part 'story_detail_response.freezed.dart';
 
-  StoryDetailResponse({
-    required this.error,
-    required this.message,
-    required this.story,
-  });
+@freezed
+abstract class StoryDetailResponse with _$StoryDetailResponse {
+  const factory StoryDetailResponse({
+    required bool error,
+    required String message,
+    required Story story,
+  }) = _StoryDetailResponse;
 
-  factory StoryDetailResponse.fromJson(Map<String, dynamic> json) {
-    return StoryDetailResponse(
-      error: json["error"],
-      message: json["message"],
-      story: Story.fromJson(json["story"]),
-    );
-  }
+  factory StoryDetailResponse.fromJson(Map<String, dynamic> json) =>
+      _$StoryDetailResponseFromJson(json);
 }

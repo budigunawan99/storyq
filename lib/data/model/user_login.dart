@@ -1,15 +1,12 @@
-class UserLogin {
-  String? email;
-  String? password;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  UserLogin({this.email, this.password});
+part 'user_login.g.dart';
+part 'user_login.freezed.dart';
 
-  @override
-  String toString() => 'User(email: $email, password: $password)';
+@freezed
+abstract class UserLogin with _$UserLogin {
+  const factory UserLogin({String? email, String? password}) = _UserLogin;
 
-  factory UserLogin.fromJson(Map<String, dynamic> json) {
-    return UserLogin(email: json['email'], password: json['password']);
-  }
-
-  Map<String, dynamic> toJson() => {'email': email, 'password': password};
+  factory UserLogin.fromJson(Map<String, dynamic> json) =>
+      _$UserLoginFromJson(json);
 }

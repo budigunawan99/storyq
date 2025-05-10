@@ -1,21 +1,13 @@
-class Session {
-  String? userId;
-  String? name;
-  String? token;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  Session({this.userId, this.name, this.token});
+part 'session.g.dart';
+part 'session.freezed.dart';
 
-  factory Session.fromJson(Map<String, dynamic> json) {
-    return Session(
-      userId: json['userId'],
-      name: json['name'],
-      token: json['token'],
-    );
-  }
+@freezed
+abstract class Session with _$Session {
+  const factory Session({String? userId, String? name, String? token}) =
+      _Session;
 
-  Map<String, dynamic> toJson() => {
-    'userId': userId,
-    'name': name,
-    'token': token,
-  };
+  factory Session.fromJson(Map<String, dynamic> json) =>
+      _$SessionFromJson(json);
 }

@@ -196,9 +196,9 @@ class _DetailScreenState extends State<DetailScreen> {
                                               child: Icon(
                                                 Icons.add,
                                                 color:
-                                                    Theme.of(
-                                                      context,
-                                                    ).colorScheme.surface,
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .surfaceContainer,
                                               ),
                                             ),
                                             FloatingActionButton.small(
@@ -215,9 +215,9 @@ class _DetailScreenState extends State<DetailScreen> {
                                               child: Icon(
                                                 Icons.remove,
                                                 color:
-                                                    Theme.of(
-                                                      context,
-                                                    ).colorScheme.surface,
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .surfaceContainer,
                                               ),
                                             ),
                                           ],
