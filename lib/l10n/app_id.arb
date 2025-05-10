@@ -23,5 +23,16 @@
   "saveButton": "Simpan",
   "descriptionHint": "Masukkan deskripsi",
   "cameraTooltip": "Buka kamera",
-  "galleryTooltip": "Pilih dari galeri"
+  "galleryTooltip": "Pilih dari galeri",
+  "notFoundSession": "Session tidak ditemukan.",
+  "noDataUploaded": "Tidak ada data yang diupload",
+  "noDescInserted": "Masukkan deskripsi terlebih dahulu!",
+  "notSupportedGps": "Layanan lokasi tidak tersedia.",
+  "notAllowedGps": "Izin lokasi ditolak.",
+  "uploadSuccess": "Data berhasil diupload!",
+  "locationSub": "Lokasi",
+  "unsupportedLocationMsg": "Tidak ada data lokasi / lokasi tidak didukung",
+  "locationSearching": "Sedang mencari lokasi ...",
+  "chooseLocationMenu": "Pilih lokasi",
+  "nextMenu": "Lanjut"
 }

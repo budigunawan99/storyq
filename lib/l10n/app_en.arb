@@ -23,5 +23,16 @@
   "saveButton": "Save",
   "descriptionHint": "Enter description",
   "cameraTooltip": "Open camera",
-  "galleryTooltip": "Choose from gallery"
+  "galleryTooltip": "Choose from gallery",
+  "notFoundSession": "Session is not found.",
+  "noDataUploaded": "No data uploaded",
+  "noDescInserted": "Please input the description!",
+  "notSupportedGps": "Location service is not available",
+  "notAllowedGps": "Location service is not allowed",
+  "uploadSuccess": "Data has successfully uploaded!",
+  "locationSub": "Location",
+  "unsupportedLocationMsg": "No location data / location service is not supported",
+  "locationSearching": "Searching for location ...",
+  "chooseLocationMenu": "Choose location",
+  "nextMenu": "Next"
 }

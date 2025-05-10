@@ -66,6 +66,12 @@ class CreateStoryProvider extends ChangeNotifier {
     return info[0];
   }
 
+  bool _isServiceEnabled = false;
+  bool get isServiceEnabled => _isServiceEnabled;
+
+  bool _isPermissionGranted = false;
+  bool get isPermissionGranted => _isPermissionGranted;
+
   Future<void> getMyLocation() async {
     final Location location = Location();
     late bool serviceEnabled;
@@ -80,6 +86,9 @@ class CreateStoryProvider extends ChangeNotifier {
         return;
       }
     }
+    
+    _isServiceEnabled = serviceEnabled;
+
     permissionGranted = await location.hasPermission();
     if (permissionGranted == PermissionStatus.denied) {
       permissionGranted = await location.requestPermission();
@@ -88,6 +97,8 @@ class CreateStoryProvider extends ChangeNotifier {
         return;
       }
     }
+
+    _isPermissionGranted = true;
 
     locationData = await location.getLocation();
     final latLng = LatLng(locationData.latitude!, locationData.longitude!);

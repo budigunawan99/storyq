@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:storyq/common.dart';
 import 'package:storyq/provider/create/create_story_provider.dart';
 import 'package:storyq/screen/common/appbar.dart';
 
@@ -24,7 +25,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
     return Scaffold(
       appBar: Appbar(
         isHomePage: false,
-        title: "Pilih lokasi",
+        title: AppLocalizations.of(context)!.chooseLocationMenu,
         onPop: widget.onPop,
       ),
       body: Consumer<CreateStoryProvider>(
@@ -93,7 +94,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen> {
                                   Theme.of(context).colorScheme.onSurface,
                             ),
                             child: Text(
-                              "Lanjut",
+                              AppLocalizations.of(context)!.nextMenu,
                               style: Theme.of(
                                 context,
                               ).textTheme.titleSmall?.copyWith(

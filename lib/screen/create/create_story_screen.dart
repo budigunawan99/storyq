@@ -37,8 +37,7 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
     final provider = context.read<CreateStoryProvider>();
     Future.microtask(() {
       provider.getMyLocation();
-      addressController.text =
-          provider.myAddress ?? "Sedang mencari lokasi ...";
+      addressController.text = provider.myAddress ?? "Loading...";
     });
   }
 
@@ -62,9 +61,18 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
           SliverToBoxAdapter(
             child: Consumer<CreateStoryProvider>(
               builder: (context, value, child) {
-                if (value.myAddress != null) {
-                  addressController.text = value.myAddress!;
+                if (!value.isServiceEnabled) {
+                  addressController.text =
+                      AppLocalizations.of(context)!.notSupportedGps;
+                } else if (!value.isPermissionGranted) {
+                  addressController.text =
+                      AppLocalizations.of(context)!.notAllowedGps;
+                } else {
+                  if (value.myAddress != null) {
+                    addressController.text = value.myAddress!;
+                  }
                 }
+
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -187,7 +195,9 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
                               SizedBox.square(dimension: 8),
                               Expanded(
                                 child: Text(
-                                  "Pilih lokasi",
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.chooseLocationMenu,
                                   style: Theme.of(
                                     context,
                                   ).textTheme.titleSmall?.copyWith(
@@ -336,12 +346,12 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
     final imageFile = provider.imageFile;
     if (imagePath == null || imageFile == null) {
       scaffoldMessengerState.showSnackBar(
-        SnackBar(content: Text("Tidak ada data yang diupload")),
+        SnackBar(content: Text(AppLocalizations.of(context)!.noDataUploaded)),
       );
       return;
     } else if (descriptionController.text.isEmpty) {
       scaffoldMessengerState.showSnackBar(
-        SnackBar(content: Text("Masukkan deskripsi terlebih dahulu!")),
+        SnackBar(content: Text(AppLocalizations.of(context)!.noDescInserted)),
       );
       return;
     }
@@ -373,7 +383,7 @@ class _CreateStoryScreenState extends State<CreateStoryScreen> {
         storyProvider.fetchStoryList();
         widget.onPosted();
         scaffoldMessengerState.showSnackBar(
-          SnackBar(content: Text("Data berhasil diupload!")),
+          SnackBar(content: Text(AppLocalizations.of(context)!.uploadSuccess)),
         );
       default:
     }

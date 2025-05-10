@@ -125,7 +125,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       Padding(
                         padding: EdgeInsets.all(15),
                         child: Text(
-                          "Lokasi",
+                          AppLocalizations.of(context)!.locationSub,
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ),
@@ -256,7 +256,9 @@ class _DetailScreenState extends State<DetailScreen> {
                                           ).colorScheme.onSurface,
                                     ),
                                     Text(
-                                      "Tidak ada data lokasi / lokasi tidak didukung",
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.unsupportedLocationMsg,
                                       style:
                                           Theme.of(
                                             context,
